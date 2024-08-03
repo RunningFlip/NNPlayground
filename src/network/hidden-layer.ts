@@ -14,7 +14,7 @@ export class HiddenLayer extends Layer {
 
     public calculateResult(input: Vector) : Vector {
 
-        const weights: Matrix = this.createWeighMatrix();
+        const weights: Matrix = this.createWeighMatrix().transpose() // why do we really need to transponse here?;
         const results: Vector = weights.multiplyVector(input);
 
         for (let i = 0; i < this.info.length; i++) {

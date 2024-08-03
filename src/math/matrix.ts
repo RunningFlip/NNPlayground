@@ -107,6 +107,21 @@ export class Matrix {
     }
 
     // --------------------------------------------------------------------------------
+
+    // Transpose the matrix
+    public transpose(): Matrix {
+
+        const transposed = new Matrix(this.columns, this.rows);
+        
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                transposed.setValue(j, i, this.matrix[i][j]);
+            }
+        }
+        return transposed;
+    }
+
+    // --------------------------------------------------------------------------------
   
     // Print the matrix
     publicprint(): void {

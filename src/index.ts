@@ -14,13 +14,13 @@ const info: NeuronInfo[] = [
   {color: "rgb(61, 209, 189)", neuron: new Neuron(2, vec2.fromValues(50, 250))},
   {color: "rgb(61, 209, 189)", neuron: new Neuron(3, vec2.fromValues(50, 400))},
 
-  {color: "rgb(61, 209, 189)", neuron: new Neuron(4, vec2.fromValues(350, 100)), incomingLink: [new Link(1, 0.9), new Link(2, 0.2), new Link(3, 0.1)]},
-  {color: "rgb(61, 209, 189)", neuron: new Neuron(5, vec2.fromValues(350, 250)), incomingLink: [new Link(1, 0.3), new Link(2, 0.8), new Link(3, 0.5)]},
-  {color: "rgb(61, 209, 189)", neuron: new Neuron(6, vec2.fromValues(350, 400)), incomingLink: [new Link(1, 0.4), new Link(2, 0.2), new Link(3, 0.6)]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(4, vec2.fromValues(350, 100)), incomingLink: [new Link(1, 0.9), new Link(2, 0.3), new Link(3, 0.4)]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(5, vec2.fromValues(350, 250)), incomingLink: [new Link(1, 0.2), new Link(2, 0.8), new Link(3, 0.2)]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(6, vec2.fromValues(350, 400)), incomingLink: [new Link(1, 0.1), new Link(2, 0.5), new Link(3, 0.6)]},
  
-  {color: "rgb(191, 99, 174)", neuron: new Neuron(7, vec2.fromValues(650, 100)), incomingLink: [new Link(4, 0.3), new Link(5, 0.6), new Link(6, 0.8)]},
-  {color: "rgb(191, 99, 174)", neuron: new Neuron(8, vec2.fromValues(650, 250)), incomingLink: [new Link(4, 0.7), new Link(5, 0.5), new Link(6, 0.1)]},
-  {color: "rgb(191, 99, 174)", neuron: new Neuron(9, vec2.fromValues(650, 400)), incomingLink: [new Link(4, 0.5), new Link(5, 0.2), new Link(6, 0.9)]},
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(7, vec2.fromValues(650, 100)), incomingLink: [new Link(4, 0.3), new Link(5, 0.7), new Link(6, 0.5)]},
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(8, vec2.fromValues(650, 250)), incomingLink: [new Link(4, 0.6), new Link(5, 0.5), new Link(6, 0.2)]},
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(9, vec2.fromValues(650, 400)), incomingLink: [new Link(4, 0.8), new Link(5, 0.1), new Link(6, 0.9)]},
 ];
 
 const layers: Layer[] = [
