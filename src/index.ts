@@ -1,34 +1,42 @@
 import * as d3 from 'd3';
 import { vec2 } from 'gl-matrix';
 import { sigmoidFunc } from './math/activation-functions';
-import { Layer, Neuron, NeuronInfo } from './network/layer';
+import { Vector } from './math/vector';
+import { HiddenLayer } from './network/hidden-layer';
+import { InputLayer } from './network/input-layer';
+import { Layer, Link, Neuron, NeuronInfo } from './network/layer';
 import { Network } from './network/network';
 
 // --------------------------------------------------------------------------------
 
 const info: NeuronInfo[] = [
-  {color: "rgb(61, 209, 189)", neuron: { id: 1, pos: vec2.fromValues(50, 100) }, links: [{ targetId: 3 }, { targetId: 4 }, { targetId: 5 }]},
-  {color: "rgb(61, 209, 189)", neuron: { id: 2, pos: vec2.fromValues(50, 300) }, links: [{ targetId: 3 }, { targetId: 4 }, { targetId: 5 }]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(1, vec2.fromValues(50, 100))},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(2, vec2.fromValues(50, 200))},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(3, vec2.fromValues(50, 300))},
 
-  {color: "rgba(129, 137, 219)", neuron: { id: 3, pos: vec2.fromValues(250, 50) }, links: [{ targetId: 6 }, { targetId: 7 }, { targetId: 8 }]},
-  {color: "rgba(129, 137, 219)", neuron: { id: 4, pos: vec2.fromValues(250, 200) }, links: [{ targetId: 6 }, { targetId: 7 }, { targetId: 8 }]},
-  {color: "rgba(129, 137, 219)", neuron: { id: 5, pos: vec2.fromValues(250, 350) }, links: [{ targetId: 6 }, { targetId: 7 }, { targetId: 8 }]},
-
-  {color: "rgba(129, 137, 219)", neuron: { id: 6, pos: vec2.fromValues(450, 50) }, links: [{ targetId: 9 }, { targetId: 10 }]},
-  {color: "rgba(129, 137, 219)", neuron: { id: 7, pos: vec2.fromValues(450, 200) }, links: [{ targetId: 9 }, { targetId: 10 }]},
-  {color: "rgba(129, 137, 219)", neuron: { id: 8, pos: vec2.fromValues(450, 350) }, links: [{ targetId: 9 }, { targetId: 10 }]},
-
-  {color: "rgb(191, 99, 174)", neuron: { id: 9, pos: vec2.fromValues(650, 100) }},
-  {color: "rgb(191, 99, 174)", neuron: { id: 10, pos: vec2.fromValues(650, 300) }},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(4, vec2.fromValues(350, 100)), incomingLink: [new Link(1, 0.9), new Link(2, 0.2), new Link(3, 0.1)]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(5, vec2.fromValues(350, 200)), incomingLink: [new Link(1, 0.3), new Link(2, 0.8), new Link(3, 0.5)]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(6, vec2.fromValues(350, 300)), incomingLink: [new Link(1, 0.4), new Link(2, 0.2), new Link(3, 0.6)]},
+ 
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(7, vec2.fromValues(650, 100)), incomingLink: [new Link(4, 0.3), new Link(5, 0.6), new Link(6, 0.8)]},
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(8, vec2.fromValues(650, 200)), incomingLink: [new Link(4, 0.7), new Link(5, 0.5), new Link(6, 0.1)]},
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(9, vec2.fromValues(650, 300)), incomingLink: [new Link(4, 0.5), new Link(5, 0.2), new Link(6, 0.9)]},
 ];
 
 const layers: Layer[] = [
-  new Layer([info[0], info[1]], sigmoidFunc),
-  new Layer([info[2], info[3]], sigmoidFunc),
-  new Layer([info[4], info[5]]),
+  new InputLayer([info[0], info[1], info[2]]),
+  new HiddenLayer([info[3], info[4], info[5]], sigmoidFunc),
+  new HiddenLayer([info[6], info[7], info[8]], sigmoidFunc),
 ];
 
 const network: Network = new Network(layers);
+
+const input: Vector = new Vector(3);
+input.setValue(0, 0.9);
+input.setValue(1, 0.1);
+input.setValue(2, 0.8);
+
+network.calculate(input);
 
 // --------------------------------------------------------------------------------
 
@@ -61,7 +69,7 @@ svg.append('defs').append('marker')
 .attr('fill', 'black');
 
 const link = svg.selectAll('.link')
-  .data(info.flatMap(i => i.links ? i.links.map(link => ({ source: i.neuron.id, target: link.targetId, weight: link.weight ?? 0})) : []))
+  .data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
   .enter().append('line')
   .attr('class', 'link')
   .attr('x1', link => getNodeById(link!.source).pos[0])
@@ -72,7 +80,7 @@ const link = svg.selectAll('.link')
 
   // Draw the arrowheads at the midpoint of the lines
 const arrowheads = svg.selectAll('.arrowhead')
-.data(info.flatMap(i => i.links ? i.links.map(link => ({ source: i.neuron.id, target: link.targetId, weight: link.weight ?? 0})) : []))
+.data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
 .enter().append('line')
   .attr('class', 'arrowhead')
   .attr('x1', link => {
@@ -100,7 +108,7 @@ const arrowheads = svg.selectAll('.arrowhead')
 
   // Draw the weights at the first third of the links
 const linkGroups = svg.selectAll('.link-group')
-.data(info.flatMap(i => i.links ? i.links.map(link => ({ source: i.neuron.id, target: link.targetId, weight: link.weight ?? 0})) : []))
+.data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
 .enter().append('g')
 .attr('class', 'link-group')
 .attr('transform', link => {
@@ -158,4 +166,4 @@ const valueText = svg.selectAll('.valueText')
   .attr('x', info => info.neuron.pos[0])
   .attr('y', info => info.neuron.pos[1] + 5)
   .attr('text-anchor', 'middle')
-  .text(info => info.neuron.value ?? 0);
+  .text(info => info.neuron.value.toFixed(3));
