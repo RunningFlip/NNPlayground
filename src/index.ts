@@ -36,7 +36,12 @@ input.setValue(0, 0.9);
 input.setValue(1, 0.1);
 input.setValue(2, 0.8);
 
-network.calculate(input);
+const output: Vector = new Vector(3);
+output.setValue(0, 0.726);
+output.setValue(1, 0.708);
+output.setValue(2, 0.778);
+
+network.calculate(input, output);
 
 // --------------------------------------------------------------------------------
 
@@ -133,7 +138,7 @@ linkGroups.append('text')
   .attr('class', 'link-text')
   .attr('text-anchor', 'middle')
   .attr('dy', '0.35em') // Center the text vertically
-  .text(link => link.weight.toFixed(2))
+  .text(link => link.weight.toFixed(3))
   .style('font-size', '10px') // Set the desired font size
   .style('font-weight', 'bold'); // Make the text bold
 
