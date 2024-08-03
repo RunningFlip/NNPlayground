@@ -4,7 +4,7 @@ import { Layer, NeuronInfo } from "./layer";
 
 
 export class HiddenLayer extends Layer {
-
+    
     private readonly activationFunc: (value: number) => number;
 
     constructor(info: NeuronInfo[], activationFunc: (value: number) => number) {
@@ -14,7 +14,7 @@ export class HiddenLayer extends Layer {
 
     public calculateResult(input: Vector) : Vector {
 
-        const weights: Matrix = this.createWeighMatrix().transpose() // why do we really need to transponse here?;
+        const weights: Matrix = this.createWeigthMatrix().transpose(); // why do we really need to transponse here?;
         const results: Vector = weights.multiplyVector(input);
 
         for (let i = 0; i < this.info.length; i++) {
@@ -27,7 +27,35 @@ export class HiddenLayer extends Layer {
         return results;
     }
 
-    private createWeighMatrix(): Matrix {
+    public backPropagate(expectedOutput: Vector): Vector {
+
+        const weights: Matrix = this.createWeigthMatrix().transpose();
+        
+        let error: Vector = this.createValuesVector().substract(expectedOutput);
+        error = weights.multiplyVector(error);
+
+        for (let i = 0; i < this.info.length; i++) {
+           
+            const currentInfo: NeuronInfo = this.info[i];
+            const currentWeight: number = currentInfo.incomingLink![i].weight;
+            currentInfo.incomingLink![i].weight = currentWeight + error.getValue(i);
+        }
+
+        return error;
+    }
+
+    private createValuesVector(): Vector {
+
+        const values: Vector = new Vector(this.info.length);
+
+        for (let i = 0; i < this.info.length; i++) {
+            values.setValue(i, this.info[i].neuron.value);
+        }
+
+        return values;
+    }
+
+    private createWeigthMatrix(): Matrix {
 
         const weights: Matrix = new Matrix(this.info[0].incomingLink!.length, this.info.length);
 

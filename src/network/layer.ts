@@ -22,7 +22,7 @@ export class Neuron {
 export class Link {
 
     public readonly id: number;
-    public readonly weight: number;
+    public weight: number;
 
     constructor(id: number, weight?: number) {
         this.id = id;
@@ -50,6 +50,9 @@ export abstract class Layer {
         this.info = info;
     }
 
+    public abstract backPropagate(expectedOutput: Vector): Vector;
+    protected abstract calculateResult(input: Vector) : Vector;
+
     public calculate(input: Vector): Vector {
 
         const result: Vector = this.calculateResult(input);
@@ -60,6 +63,4 @@ export abstract class Layer {
 
         return result;
     }
-
-    protected abstract calculateResult(input: Vector) : Vector;
 }

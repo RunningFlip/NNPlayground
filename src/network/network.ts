@@ -29,7 +29,7 @@ export class Network {
     // Methods
     // --------------------------------------------------------------------------------
     
-    public calculate(input: Vector): Vector {
+    public calculate(input: Vector, expectedOutput: Vector): boolean {
 
         let result = input;
 
@@ -37,6 +37,21 @@ export class Network {
             result = this.layers[i].calculate(result);
         }
 
-        return result;
+        const correct: boolean = result === expectedOutput;
+
+        if (!correct) {
+            this.backPropegate(expectedOutput);
+        }
+
+        return correct;
+    }
+
+    // --------------------------------------------------------------------------------
+
+    private backPropegate(expectedResult: Vector): void {
+        
+        for (let i = this.layers.length - 1; i >= 0; i--) {
+            expectedResult = this.layers[i].backPropagate(expectedResult);
+        }
     }
 }

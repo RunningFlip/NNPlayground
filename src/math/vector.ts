@@ -1,3 +1,11 @@
+export function vectorZero(size: number): Vector {
+  return new Vector(size, 0);
+}
+
+export function vectorOne(size: number): Vector {
+  return new Vector(size, 1);
+}
+
 export class Vector {
 
     // --------------------------------------------------------------------------------
@@ -62,6 +70,36 @@ export class Vector {
         sum += this.values[i] * other.getValue(i);
       }
       return sum;
+    }
+
+  // --------------------------------------------------------------------------------
+
+    public add(other: Vector): Vector {
+
+      if (this.size !== other.size) {
+        throw new Error('Vectors must be of the same size for dot product');
+      }
+
+      const result: Vector = new Vector(this.size);
+      for (let i = 0; i < this.size; i++) {
+        result.setValue(i, this.values[i] + other.getValue(i));
+      }
+      return result;
+    }
+
+    // --------------------------------------------------------------------------------
+
+    public substract(other: Vector): Vector {
+
+      if (this.size !== other.size) {
+        throw new Error('Vectors must be of the same size for dot product');
+      }
+
+      const result: Vector = new Vector(this.size);
+      for (let i = 0; i < this.size; i++) {
+        result.setValue(i, this.values[i] - other.getValue(i));
+      }
+      return result;
     }
 
     // --------------------------------------------------------------------------------
