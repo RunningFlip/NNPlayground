@@ -11,16 +11,16 @@ import { Network } from './network/network';
 
 const info: NeuronInfo[] = [
   {color: "rgb(61, 209, 189)", neuron: new Neuron(1, vec2.fromValues(50, 100))},
-  {color: "rgb(61, 209, 189)", neuron: new Neuron(2, vec2.fromValues(50, 200))},
-  {color: "rgb(61, 209, 189)", neuron: new Neuron(3, vec2.fromValues(50, 300))},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(2, vec2.fromValues(50, 250))},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(3, vec2.fromValues(50, 400))},
 
   {color: "rgb(61, 209, 189)", neuron: new Neuron(4, vec2.fromValues(350, 100)), incomingLink: [new Link(1, 0.9), new Link(2, 0.2), new Link(3, 0.1)]},
-  {color: "rgb(61, 209, 189)", neuron: new Neuron(5, vec2.fromValues(350, 200)), incomingLink: [new Link(1, 0.3), new Link(2, 0.8), new Link(3, 0.5)]},
-  {color: "rgb(61, 209, 189)", neuron: new Neuron(6, vec2.fromValues(350, 300)), incomingLink: [new Link(1, 0.4), new Link(2, 0.2), new Link(3, 0.6)]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(5, vec2.fromValues(350, 250)), incomingLink: [new Link(1, 0.3), new Link(2, 0.8), new Link(3, 0.5)]},
+  {color: "rgb(61, 209, 189)", neuron: new Neuron(6, vec2.fromValues(350, 400)), incomingLink: [new Link(1, 0.4), new Link(2, 0.2), new Link(3, 0.6)]},
  
   {color: "rgb(191, 99, 174)", neuron: new Neuron(7, vec2.fromValues(650, 100)), incomingLink: [new Link(4, 0.3), new Link(5, 0.6), new Link(6, 0.8)]},
-  {color: "rgb(191, 99, 174)", neuron: new Neuron(8, vec2.fromValues(650, 200)), incomingLink: [new Link(4, 0.7), new Link(5, 0.5), new Link(6, 0.1)]},
-  {color: "rgb(191, 99, 174)", neuron: new Neuron(9, vec2.fromValues(650, 300)), incomingLink: [new Link(4, 0.5), new Link(5, 0.2), new Link(6, 0.9)]},
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(8, vec2.fromValues(650, 250)), incomingLink: [new Link(4, 0.7), new Link(5, 0.5), new Link(6, 0.1)]},
+  {color: "rgb(191, 99, 174)", neuron: new Neuron(9, vec2.fromValues(650, 400)), incomingLink: [new Link(4, 0.5), new Link(5, 0.2), new Link(6, 0.9)]},
 ];
 
 const layers: Layer[] = [
@@ -86,37 +86,37 @@ const arrowheads = svg.selectAll('.arrowhead')
   .attr('x1', link => {
     const sourcePos = getNodeById(link.source).pos;
     const targetPos = getNodeById(link.target).pos;
-    return sourcePos[0] + 2 * (targetPos[0] - sourcePos[0]) / 3;
+    return sourcePos[0] + 5 * (targetPos[0] - sourcePos[0]) / 6;
   })
   .attr('y1', link => {
     const sourcePos = getNodeById(link.source).pos;
     const targetPos = getNodeById(link.target).pos;
-    return sourcePos[1] + 2 * (targetPos[1] - sourcePos[1]) / 3;
+    return sourcePos[1] + 5 * (targetPos[1] - sourcePos[1]) / 6;
   })
   .attr('x2', link => {
     const sourcePos = getNodeById(link.source).pos;
     const targetPos = getNodeById(link.target).pos;
-    return sourcePos[0] + 2 * (targetPos[0] - sourcePos[0]) / 3 + (targetPos[0] - sourcePos[0]) / 30; // Small offset to show the arrowhead
+    return sourcePos[0] + 5 * (targetPos[0] - sourcePos[0]) / 6 + (targetPos[0] - sourcePos[0]) / 60; // Small offset to show the arrowhead
   })
   .attr('y2', link => {
     const sourcePos = getNodeById(link.source).pos;
     const targetPos = getNodeById(link.target).pos;
-    return sourcePos[1] + 2 * (targetPos[1] - sourcePos[1]) / 3 + (targetPos[1] - sourcePos[1]) / 30; // Small offset to show the arrowhead
+    return sourcePos[1] + 5 * (targetPos[1] - sourcePos[1]) / 6 + (targetPos[1] - sourcePos[1]) / 60; // Small offset to show the arrowhead
   })
   .attr('stroke', 'black')
   .attr('marker-end', 'url(#arrowhead)');
 
   // Draw the weights at the first third of the links
 const linkGroups = svg.selectAll('.link-group')
-.data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
-.enter().append('g')
-.attr('class', 'link-group')
-.attr('transform', link => {
-  const sourcePos = getNodeById(link.source).pos;
-  const targetPos = getNodeById(link.target).pos;
-  const x = sourcePos[0] + (targetPos[0] - sourcePos[0]) / 4;
-  const y = sourcePos[1] + (targetPos[1] - sourcePos[1]) / 4;
-  return `translate(${x},${y})`;
+  .data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
+  .enter().append('g')
+  .attr('class', 'link-group')
+  .attr('transform', link => {
+    const sourcePos = getNodeById(link.source).pos;
+    const targetPos = getNodeById(link.target).pos;
+    const x = sourcePos[0] + (targetPos[0] - sourcePos[0]) / 4;
+    const y = sourcePos[1] + (targetPos[1] - sourcePos[1]) / 4;
+    return `translate(${x},${y})`;
 });
 
 // Draw background rectangles
