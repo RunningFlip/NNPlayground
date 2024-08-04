@@ -2,15 +2,28 @@ import { Matrix } from "../math/matrix";
 import { Vector } from "../math/vector";
 import { Layer, NeuronInfo } from "./layer";
 
+// --------------------------------------------------------------------------------
 
 export class HiddenLayer extends Layer {
+
+    // --------------------------------------------------------------------------------
+    // Fields
+    // --------------------------------------------------------------------------------
     
     private readonly activationFunc: (value: number) => number;
 
-    constructor(info: NeuronInfo[], activationFunc: (value: number) => number) {
+    // --------------------------------------------------------------------------------
+    // Constructor
+    // --------------------------------------------------------------------------------
+
+    public constructor(info: NeuronInfo[], activationFunc: (value: number) => number) {
         super(info);       
         this.activationFunc = activationFunc;
     }
+
+    // --------------------------------------------------------------------------------
+    // Methods
+    // --------------------------------------------------------------------------------
 
     public calculateResult(input: Vector) : Vector {
 
@@ -27,6 +40,8 @@ export class HiddenLayer extends Layer {
         return results;
     }
 
+    // --------------------------------------------------------------------------------
+    
     public backPropagate(expectedOutput: Vector): Vector {
 
         const weights: Matrix = this.createWeigthMatrix().transpose();
@@ -44,6 +59,8 @@ export class HiddenLayer extends Layer {
         return error;
     }
 
+    // --------------------------------------------------------------------------------
+    
     private createValuesVector(): Vector {
 
         const values: Vector = new Vector(this.info.length);
@@ -55,6 +72,8 @@ export class HiddenLayer extends Layer {
         return values;
     }
 
+    // --------------------------------------------------------------------------------
+    
     private createWeigthMatrix(): Matrix {
 
         const weights: Matrix = new Matrix(this.info[0].incomingLink!.length, this.info.length);

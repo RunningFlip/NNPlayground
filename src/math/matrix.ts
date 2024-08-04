@@ -38,7 +38,6 @@ export class Matrix {
     // Methods
     // --------------------------------------------------------------------------------
   
-    // Get value at specific row and column
     public getValue(row: number, column: number): number {
 
         if (row < 0 || row >= this.rows || column < 0 || column >= this.columns) {
@@ -49,7 +48,6 @@ export class Matrix {
 
     // --------------------------------------------------------------------------------
   
-    // Set value at specific row and column
     public setValue(row: number, column: number, value: number): void {
 
         if (row < 0 || row >= this.rows || column < 0 || column >= this.columns) {
@@ -59,8 +57,7 @@ export class Matrix {
     }
 
     // --------------------------------------------------------------------------------
-  
-    // Multiply this matrix with another matrix
+
     public multiply(other: Matrix): Matrix {
 
         if (this.columns !== other.rowCount) {
@@ -108,7 +105,6 @@ export class Matrix {
 
     // --------------------------------------------------------------------------------
 
-    // Transpose the matrix
     public transpose(): Matrix {
 
         const transposed = new Matrix(this.columns, this.rows);
@@ -122,8 +118,7 @@ export class Matrix {
     }
 
     // --------------------------------------------------------------------------------
-  
-    // Print the matrix
+
     publicprint(): void {
         console.log(this.matrix.map(row => row.join(' ')).join('\n'));
     }

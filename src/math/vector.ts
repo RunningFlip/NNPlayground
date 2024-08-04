@@ -2,9 +2,13 @@ export function vectorZero(size: number): Vector {
   return new Vector(size, 0);
 }
 
+// --------------------------------------------------------------------------------
+
 export function vectorOne(size: number): Vector {
   return new Vector(size, 1);
 }
+
+// --------------------------------------------------------------------------------
 
 export class Vector {
 
@@ -18,9 +22,7 @@ export class Vector {
     // Properties
     // --------------------------------------------------------------------------------
 
-    // Get size of the vector
     public get size(): number {
-
       return this.values.length;
     }
 
@@ -29,14 +31,13 @@ export class Vector {
     // --------------------------------------------------------------------------------
 
     public constructor(size: number, initialValue: number = 0) {
-        this.values = Array(size).fill(initialValue);
+      this.values = Array(size).fill(initialValue);
     }
 
     // --------------------------------------------------------------------------------
     // Methods
     // --------------------------------------------------------------------------------
 
-    // Get value at specific index
     public getValue(index: number): number {
 
       if (index < 0 || index >= this.size) {
@@ -47,7 +48,6 @@ export class Vector {
 
     // --------------------------------------------------------------------------------
 
-    // Set value at specific index
     public setValue(index: number, value: number): void {
 
       if (index < 0 || index >= this.size) {
@@ -58,7 +58,6 @@ export class Vector {
 
     // --------------------------------------------------------------------------------
 
-    // Dot product with another vector
     public dotProduct(other: Vector): number {
 
       if (this.size !== other.size) {
@@ -81,6 +80,7 @@ export class Vector {
       }
 
       const result: Vector = new Vector(this.size);
+
       for (let i = 0; i < this.size; i++) {
         result.setValue(i, this.values[i] + other.getValue(i));
       }
@@ -96,6 +96,7 @@ export class Vector {
       }
 
       const result: Vector = new Vector(this.size);
+
       for (let i = 0; i < this.size; i++) {
         result.setValue(i, this.values[i] - other.getValue(i));
       }
@@ -104,7 +105,6 @@ export class Vector {
 
     // --------------------------------------------------------------------------------
     
-    // Print the vector
     public print(): void {
       console.log(this.values.join(' '));
     }
