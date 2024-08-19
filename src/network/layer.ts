@@ -1,34 +1,8 @@
-import { vec2 } from "gl-matrix"
+import { drawLine, drawNode } from "../drawing/draw";
+import { IDrawable } from "../drawing/drawable";
 import { Vector } from "../math/vector"
-
-// --------------------------------------------------------------------------------
-
-export class Neuron {
-
-    public readonly id: number;
-    public readonly pos: vec2;
-    public value: number;
-
-    constructor(id: number, pos: vec2) {
-
-        this.id = id;
-        this.pos = pos;
-        this.value = 0;
-    }
-}
-
-// --------------------------------------------------------------------------------
-
-export class Link {
-
-    public readonly id: number;
-    public weight: number;
-
-    constructor(id: number, weight?: number) {
-        this.id = id;
-        this.weight = weight ?? Math.random();
-    }
-}
+import { Link } from "./link";
+import { getNodeById, Neuron } from "./neuron";
 
 // --------------------------------------------------------------------------------
 
@@ -40,7 +14,7 @@ export type NeuronInfo = {
 
 // --------------------------------------------------------------------------------
 
-export abstract class Layer {
+export abstract class Layer implements IDrawable {
 
     // --------------------------------------------------------------------------------
     // Fields
@@ -80,5 +54,37 @@ export abstract class Layer {
         }
 
         return result;
+    }
+
+    // --------------------------------------------------------------------------------
+    
+    public draw(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>): void {
+        
+        for (let i = 0; i < this.info.length; i++) {
+            
+            const info: NeuronInfo = this.info[i];
+            
+            if (info.incomingLink) {
+                this.drawLink(info, svg);
+            }
+
+            drawNode(info, svg);
+        }
+    }
+
+    // --------------------------------------------------------------------------------
+
+    private drawLink(info: NeuronInfo, svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>): void {
+
+        if (info.incomingLink) {
+
+            for (let j = 0; j < info.incomingLink.length; j++) {
+            
+                const link: Link = info.incomingLink[j]
+                const previous: Neuron = getNodeById(link.id);
+
+                drawLine(previous, info.neuron, link.weight, svg);
+            }
+        }
     }
 }

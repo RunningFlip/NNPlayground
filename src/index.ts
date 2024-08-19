@@ -4,8 +4,10 @@ import { sigmoidFunc } from './math/activation-functions';
 import { Vector } from './math/vector';
 import { HiddenLayer } from './network/hidden-layer';
 import { InputLayer } from './network/input-layer';
-import { Layer, Link, Neuron, NeuronInfo } from './network/layer';
+import { Layer, NeuronInfo } from './network/layer';
+import { Link } from './network/link';
 import { Network } from './network/network';
+import { Neuron } from './network/neuron';
 
 // --------------------------------------------------------------------------------
 
@@ -45,13 +47,6 @@ network.calculate(input, output);
 
 // --------------------------------------------------------------------------------
 
-function getNodeById(id: number): Neuron {
-    return info[info.findIndex((n) => n.neuron.id === id)].neuron;
-}
-
-// --------------------------------------------------------------------------------
-
-const radius: number = 20;
 const width: number = 1000;
 const height: number = 1000;
 
@@ -60,115 +55,4 @@ const svg = d3.select('#network')
   .attr('width', width)
   .attr('height', height);
 
-  // Define arrowhead marker
-svg.append('defs').append('marker')
-.attr('id', 'arrowhead')
-.attr('viewBox', '0 -5 10 10')
-.attr('refX', 5) // Center the arrowhead
-.attr('refY', 0)
-.attr('markerWidth', 6)
-.attr('markerHeight', 6)
-.attr('orient', 'auto')
-.append('path')
-.attr('d', 'M0,-5L10,0L0,5')
-.attr('fill', 'black');
-
-const link = svg.selectAll('.link')
-  .data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
-  .enter().append('line')
-  .attr('class', 'link')
-  .attr('x1', link => getNodeById(link!.source).pos[0])
-  .attr('y1', link => getNodeById(link!.source).pos[1])
-  .attr('x2', link => getNodeById(link!.target).pos[0])
-  .attr('y2', link => getNodeById(link!.target).pos[1])
-  .attr('stroke', 'black');
-
-  // Draw the arrowheads at the midpoint of the lines
-const arrowheads = svg.selectAll('.arrowhead')
-.data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
-.enter().append('line')
-  .attr('class', 'arrowhead')
-  .attr('x1', link => {
-    const sourcePos = getNodeById(link.source).pos;
-    const targetPos = getNodeById(link.target).pos;
-    return sourcePos[0] + 5 * (targetPos[0] - sourcePos[0]) / 6;
-  })
-  .attr('y1', link => {
-    const sourcePos = getNodeById(link.source).pos;
-    const targetPos = getNodeById(link.target).pos;
-    return sourcePos[1] + 5 * (targetPos[1] - sourcePos[1]) / 6;
-  })
-  .attr('x2', link => {
-    const sourcePos = getNodeById(link.source).pos;
-    const targetPos = getNodeById(link.target).pos;
-    return sourcePos[0] + 5 * (targetPos[0] - sourcePos[0]) / 6 + (targetPos[0] - sourcePos[0]) / 60; // Small offset to show the arrowhead
-  })
-  .attr('y2', link => {
-    const sourcePos = getNodeById(link.source).pos;
-    const targetPos = getNodeById(link.target).pos;
-    return sourcePos[1] + 5 * (targetPos[1] - sourcePos[1]) / 6 + (targetPos[1] - sourcePos[1]) / 60; // Small offset to show the arrowhead
-  })
-  .attr('stroke', 'black')
-  .attr('marker-end', 'url(#arrowhead)');
-
-  // Draw the weights at the first third of the links
-const linkGroups = svg.selectAll('.link-group')
-  .data(info.flatMap(i => i.incomingLink ? i.incomingLink.map(previous => ({ source: previous.id, target: i.neuron.id, weight: previous.weight})) : []))
-  .enter().append('g')
-  .attr('class', 'link-group')
-  .attr('transform', link => {
-    const sourcePos = getNodeById(link.source).pos;
-    const targetPos = getNodeById(link.target).pos;
-    const x = sourcePos[0] + (targetPos[0] - sourcePos[0]) / 4;
-    const y = sourcePos[1] + (targetPos[1] - sourcePos[1]) / 4;
-    return `translate(${x},${y})`;
-});
-
-// Draw background rectangles
-linkGroups.append('rect')
-  .attr('x', -15) // Adjust these values as needed to fit the text
-  .attr('y', -7.5)
-  .attr('width', 30)
-  .attr('height', 15)
-  .attr('fill', 'white')
-  .attr('stroke', 'black');
-
-// Draw the text on top of the rectangles
-linkGroups.append('text')
-  .attr('class', 'link-text')
-  .attr('text-anchor', 'middle')
-  .attr('dy', '0.35em') // Center the text vertically
-  .text(link => link.weight.toFixed(3))
-  .style('font-size', '10px') // Set the desired font size
-  .style('font-weight', 'bold'); // Make the text bold
-
-
-const node = svg.selectAll('.node')
-  .data(info)
-  .enter().append('circle')
-  .attr('class', 'node')
-  .attr('cx', info => info.neuron.pos[0])
-  .attr('cy', info => info.neuron.pos[1])
-  .attr('r', radius)
-  .attr('fill', info => info.color)
-  .attr('stroke', 'black');
-
-
-const idText = svg.selectAll('.idText')
-  .data(info)
-  .enter().append('text')
-  .attr('class', 'text')
-  .attr('x', info => info.neuron.pos[0])
-  .attr('y', info => info.neuron.pos[1] -5 - radius)
-  .attr('text-anchor', 'middle')
-  .text(info => info.neuron.id);
-
-
-const valueText = svg.selectAll('.valueText')
-  .data(info)
-  .enter().append('text')
-  .attr('class', 'text')
-  .attr('x', info => info.neuron.pos[0])
-  .attr('y', info => info.neuron.pos[1] + 5)
-  .attr('text-anchor', 'middle')
-  .text(info => info.neuron.value.toFixed(3));
+network.draw(svg);

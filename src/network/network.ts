@@ -1,9 +1,10 @@
+import { IDrawable } from "../drawing/drawable";
 import { Vector } from "../math/vector";
 import { Layer } from "./layer";
 
 // --------------------------------------------------------------------------------
 
-export class Network {
+export class Network implements IDrawable {
 
     // --------------------------------------------------------------------------------
     // Fields
@@ -52,6 +53,15 @@ export class Network {
         
         for (let i = this.layers.length - 1; i >= 0; i--) {
             expectedResult = this.layers[i].backPropagate(expectedResult);
+        }
+    }
+
+    // --------------------------------------------------------------------------------
+    
+    public draw(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>): void {
+        
+        for (let i = this.layers.length - 1; i >= 0; i--) {
+            this.layers[i].draw(svg);
         }
     }
 }
