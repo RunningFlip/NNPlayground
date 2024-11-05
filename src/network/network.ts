@@ -4,6 +4,14 @@ import { Layer } from "./layer";
 
 // --------------------------------------------------------------------------------
 
+export type NetworkResult = {
+    input: Vector,
+    output: Vector,
+    satisfied: boolean
+}
+
+// --------------------------------------------------------------------------------
+
 export class Network implements IDrawable {
 
     // --------------------------------------------------------------------------------
@@ -30,21 +38,21 @@ export class Network implements IDrawable {
     // Methods
     // --------------------------------------------------------------------------------
     
-    public calculate(input: Vector, expectedOutput: Vector): boolean {
+    public calculate(input: Vector, expectedOutput: Vector): NetworkResult {
 
-        let result = input;
+        let resultVector = input;
 
         for (let i = 0; i < this.layers.length; i++) {
-            result = this.layers[i].calculate(result);
+            resultVector = this.layers[i].calculate(resultVector);
         }
 
-        const correct: boolean = result === expectedOutput;
+        const satisfied: boolean = resultVector === expectedOutput;
 
-        if (!correct) {
+        if (!satisfied) {
             this.backPropegate(expectedOutput);
         }
-
-        return correct;
+        
+        return { input: input, output: resultVector, satisfied: satisfied };
     }
 
     // --------------------------------------------------------------------------------

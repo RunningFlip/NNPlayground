@@ -7,7 +7,7 @@ import { HiddenLayer } from './network/hidden-layer';
 import { InputLayer } from './network/input-layer';
 import { Layer, NeuronInfo } from './network/layer';
 import { Link } from './network/link';
-import { Network } from './network/network';
+import { Network, NetworkResult } from './network/network';
 import { Neuron } from './network/neuron';
 
 // --------------------------------------------------------------------------------
@@ -65,7 +65,8 @@ output.setValue(0, 0.726);
 output.setValue(1, 0.708);
 output.setValue(2, 0.778);
 
-network.calculate(input, output);
+const result: NetworkResult = network.calculate(input, output);
+
 logger.log(result);
 
 // --------------------------------------------------------------------------------
