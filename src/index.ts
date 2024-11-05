@@ -81,29 +81,23 @@ const svg = d3.select('#network')
 
 network.draw(svg);
 
-
-
+// --------------------------------------------------------------------------------
 
 // Create a clipping path for the box
-svg.append('clipPath')
-  .attr('id', 'clip-box')
-  .append('rect')
-  .attr('x', 50)
-  .attr('y', 50)
-  .attr('width', 400)
-  .attr('height', 200);
-
-// Create a group that will hold the text, and apply the clip-path
-const textGroup = svg.append('g')
-  .attr('clip-path', 'url(#clip-box)')
-  .attr('transform', `translate(0, 0)`);  // Start with no transform
-
-// Create a box (rectangle)
 const boxWidth = 400;
-const boxHeight = 200;
+const boxHeight = 205;
 const boxX = 50;
 const boxY = 50;
 
+svg.append('clipPath')
+  .attr('id', 'clip-box')
+  .append('rect')
+  .attr('x', boxX)
+  .attr('y', boxY)
+  .attr('width', boxWidth)
+  .attr('height', boxHeight);
+
+// Create a box
 svg.append('rect')
   .attr('x', boxX)
   .attr('y', boxY)
@@ -112,54 +106,49 @@ svg.append('rect')
   .attr('fill', '#f3f3f3')
   .attr('stroke', '#000');
 
+// Create a group that will hold the text, and apply the clip-path
+const textGroup = svg.append('g')
+  .attr('clip-path', 'url(#clip-box)')  
+  .attr('transform', `translate(0, 0)`);  
+
 // Set up logs data
-let logs: string[] = [
+let logs = [
   'Log 1: Initialized application',
   'Log 2: Fetched data from API',
   'Log 3: Rendered components',
   'Log 4: User clicked button',
 ];
 
-const textPadding = 10;
+const MAX_LOGS = 10;  
+const textPaddingX = 10;
+const textPaddingY = 15;
 const lineHeight = 20;
 
-// Function to render logs with scrolling if needed
+// Function to render logs
 function renderLogs() {
-  const textSelection = textGroup.selectAll<SVGTextElement, string>('text')
-    .data(logs);
+ 
+  const visibleLogs = logs.slice(-MAX_LOGS);
+  const textSelection = textGroup.selectAll<SVGTextElement, string>('text').data(visibleLogs);
 
-  // Remove old logs
   textSelection.exit().remove();
 
-  // Add new logs
-  textSelection.enter()
+  const newText = textSelection.enter()
     .append('text')
     .merge(textSelection)
-    .attr('x', boxX + textPadding)
-    .attr('y', (d, i) => textPadding + (i * lineHeight)) // Adjust 'y' position for each log
+    .attr('x', boxX + textPaddingX)
+    .attr('y', (d, i) => boxY + textPaddingY + (i * lineHeight)) // Position logs from the top
     .attr('font-size', '14px')
     .attr('fill', '#333')
     .text(d => d);
-
-  // Calculate the height of the logs and adjust the position if necessary
-  const totalHeight = logs.length * lineHeight;
-  if (totalHeight > boxHeight) {
-    const offset = boxHeight - totalHeight;
-    textGroup.attr('transform', `translate(0, ${offset})`);
-  } else {
-    textGroup.attr('transform', `translate(${boxX}, ${boxY})`);
-  }
 }
 
-// Initial render
+
 renderLogs();
 
-// Function to add new logs and scroll if necessary
+
 function addLog(newLog: string) {
   logs.push(newLog);
   renderLogs();
 }
 
-// Example: Add new logs every 2 seconds
 setInterval(() => addLog(`Log ${logs.length + 1}: New log added`), 100);
-
