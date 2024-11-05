@@ -20,7 +20,7 @@ export function drawLine(source: Neuron, target: Neuron, weight: number, svg: d3
     svg.append('defs').append('marker')
         .attr('id', 'arrowhead')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', 5) // Center the arrowhead
+        .attr('refX', 5) 
         .attr('refY', 0)
         .attr('markerWidth', 6)
         .attr('markerHeight', 6)
@@ -47,7 +47,7 @@ export function drawLine(source: Neuron, target: Neuron, weight: number, svg: d3
         });
 
     link.append('rect')
-        .attr('x', -15) // Adjust these values as needed to fit the text
+        .attr('x', -15) 
         .attr('y', -7.5)
         .attr('width', 30)
         .attr('height', 15)
@@ -57,10 +57,10 @@ export function drawLine(source: Neuron, target: Neuron, weight: number, svg: d3
     link.append('text')
         .attr('class', 'link-text')
         .attr('text-anchor', 'middle')
-        .attr('dy', '0.35em') // Center the text vertically
+        .attr('dy', '0.35em') 
         .text(weight.toFixed(3))
-        .style('font-size', '10px') // Set the desired font size
-        .style('font-weight', 'bold'); // Make the text bold
+        .style('font-size', '10px') 
+        .style('font-weight', 'bold'); 
 }
 
 // --------------------------------------------------------------------------------
@@ -80,6 +80,7 @@ export function drawNode(info: NeuronInfo, svg: d3.Selection<SVGSVGElement, unkn
         .attr('x', info.neuron.pos[0])
         .attr('y', info.neuron.pos[1] - 5 - neuronRadius)
         .attr('text-anchor', 'middle')
+        .style('font-size', '9px') 
         .text(info.neuron.id);
 
     svg.append('text')
