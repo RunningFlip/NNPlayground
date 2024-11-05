@@ -7,6 +7,7 @@ import { Layer } from "./layer";
 export type NetworkResult = {
     input: Vector,
     output: Vector,
+    expected: Vector,
     satisfied: boolean
 }
 
@@ -52,7 +53,7 @@ export class Network implements IDrawable {
             this.backPropegate(expectedOutput);
         }
         
-        return { input: input, output: resultVector, satisfied: satisfied };
+        return { input: input, output: resultVector, expected: expectedOutput, satisfied: satisfied };
     }
 
     // --------------------------------------------------------------------------------

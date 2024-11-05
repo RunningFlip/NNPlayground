@@ -90,3 +90,54 @@ export function drawNode(info: NeuronInfo, svg: d3.Selection<SVGSVGElement, unkn
         .attr('text-anchor', 'middle')
         .text(info.neuron.value.toFixed(3));
 }
+
+// --------------------------------------------------------------------------------
+
+export function drawLog(logs: string[], svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>): void {
+
+    const boxWidth = 600;
+    const boxHeight = 205;
+    const boxX = 50;
+    const boxY = 50;
+
+    svg.append('clipPath')
+    .attr('id', 'clip-box')
+    .append('rect')
+    .attr('x', boxX)
+    .attr('y', boxY)
+    .attr('width', boxWidth)
+    .attr('height', boxHeight);
+
+    // Create a box
+    svg.append('rect')
+    .attr('x', boxX)
+    .attr('y', boxY)
+    .attr('width', boxWidth)
+    .attr('height', boxHeight)
+    .attr('fill', '#f3f3f3')
+    .attr('stroke', '#000');
+
+    // Create a group that will hold the text, and apply the clip-path
+    const textGroup = svg.append('g')
+    .attr('clip-path', 'url(#clip-box)')  
+    .attr('transform', `translate(0, 0)`);  
+
+    const MAX_LOGS = 10;  
+    const textPaddingX = 10;
+    const textPaddingY = 15;
+    const lineHeight = 20;
+
+    const visibleLogs = logs.slice(-MAX_LOGS);
+    const textSelection = textGroup.selectAll<SVGTextElement, string>('text').data(visibleLogs);
+
+    textSelection.exit().remove();
+
+    textSelection.enter()
+    .append('text')
+    .merge(textSelection)
+    .attr('x', boxX + textPaddingX)
+    .attr('y', (d, i) => boxY + textPaddingY + (i * lineHeight)) // Position logs from the top
+    .attr('font-size', '14px')
+    .attr('fill', '#333')
+    .text(d => d);
+}

@@ -66,7 +66,6 @@ output.setValue(1, 0.708);
 output.setValue(2, 0.778);
 
 const result: NetworkResult = network.calculate(input, output);
-
 logger.log(result);
 
 // --------------------------------------------------------------------------------
@@ -83,72 +82,5 @@ network.draw(svg);
 
 // --------------------------------------------------------------------------------
 
-// Create a clipping path for the box
-const boxWidth = 400;
-const boxHeight = 205;
-const boxX = 50;
-const boxY = 50;
 
-svg.append('clipPath')
-  .attr('id', 'clip-box')
-  .append('rect')
-  .attr('x', boxX)
-  .attr('y', boxY)
-  .attr('width', boxWidth)
-  .attr('height', boxHeight);
-
-// Create a box
-svg.append('rect')
-  .attr('x', boxX)
-  .attr('y', boxY)
-  .attr('width', boxWidth)
-  .attr('height', boxHeight)
-  .attr('fill', '#f3f3f3')
-  .attr('stroke', '#000');
-
-// Create a group that will hold the text, and apply the clip-path
-const textGroup = svg.append('g')
-  .attr('clip-path', 'url(#clip-box)')  
-  .attr('transform', `translate(0, 0)`);  
-
-// Set up logs data
-let logs = [
-  'Log 1: Initialized application',
-  'Log 2: Fetched data from API',
-  'Log 3: Rendered components',
-  'Log 4: User clicked button',
-];
-
-const MAX_LOGS = 10;  
-const textPaddingX = 10;
-const textPaddingY = 15;
-const lineHeight = 20;
-
-// Function to render logs
-function renderLogs() {
- 
-  const visibleLogs = logs.slice(-MAX_LOGS);
-  const textSelection = textGroup.selectAll<SVGTextElement, string>('text').data(visibleLogs);
-
-  textSelection.exit().remove();
-
-  const newText = textSelection.enter()
-    .append('text')
-    .merge(textSelection)
-    .attr('x', boxX + textPaddingX)
-    .attr('y', (d, i) => boxY + textPaddingY + (i * lineHeight)) // Position logs from the top
-    .attr('font-size', '14px')
-    .attr('fill', '#333')
-    .text(d => d);
-}
-
-
-renderLogs();
-
-
-function addLog(newLog: string) {
-  logs.push(newLog);
-  renderLogs();
-}
-
-setInterval(() => addLog(`Log ${logs.length + 1}: New log added`), 100);
+logger.draw(svg);
