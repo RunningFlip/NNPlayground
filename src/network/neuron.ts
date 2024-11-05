@@ -6,7 +6,7 @@ const neurons: Neuron[] = [];
 
 // --------------------------------------------------------------------------------
 
-export function getNodeById(id: number): Neuron {
+export function getNodeById(id: string): Neuron {
     return neurons[neurons.findIndex((n) => n.id === id)];
 }
 
@@ -14,13 +14,13 @@ export function getNodeById(id: number): Neuron {
 
 export class Neuron implements Disposable {
 
-    public readonly id: number;
+    public readonly id: string;
     public readonly pos: vec2;
     public value: number;
 
-    constructor(id: number, pos: vec2) {
+    constructor(pos: vec2) {
 
-        this.id = id;
+        this.id = crypto.randomUUID();
         this.pos = pos;
         this.value = 0;
 
